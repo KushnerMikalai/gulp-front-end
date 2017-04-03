@@ -1,0 +1,23 @@
+{
+    "name": "front-nik",
+    "version": "2.0.0",
+    "homepage": "",
+    "authors": [
+        "Nikolai Kushner <nickminskwdf@gmail.com>"
+    ],
+    "description": "Nik boilerplate for pug+js+stylus apps",
+    "moduleType": [
+        "globals"
+    ],
+    "license": "MIT",
+    "dependencies": {
+        "jquery": "^3.2.1"
+    },
+    "overrides": {
+        "jquery": {
+            "main": [
+                "./dist/jquery.min.js"
+            ]
+        }
+    }
+}

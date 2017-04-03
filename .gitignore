@@ -1,0 +1,13 @@
+psd
+design
+.DS_Store
+.svn
+.CVS
+.git
+.idea
+.vscode
+bower_components
+node_modules
+zip
+*.[oa]
+*~

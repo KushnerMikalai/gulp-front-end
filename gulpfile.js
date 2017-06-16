@@ -8,7 +8,6 @@ var gulp = require('gulp'),
 	pug = require('gulp-pug'),
 	stylus = require('gulp-stylus'),
 	imagemin = require('gulp-imagemin'),
-	// image = require('gulp-image'),
 	uglify = require('gulp-uglify'),
 	rename = require("gulp-rename"),
 	browserSync = require("browser-sync"),
@@ -72,30 +71,6 @@ gulp.task('js:build', function() {
 		.pipe(reload({stream: true}));
 });
 
-// gulp.task('js:build_min', function() {
-// 	return gulp.src(path.src.js)
-// 		.pipe(plumber())
-// 		.pipe(rigger())
-// 		.pipe(uglify())
-// 		.pipe(rename({
-// 			extname: '.min.js'
-// 		}))
-// 		.pipe(gulp.dest(path.build.js));
-// });
-
-// gulp.task('style:build_min', function() {
-// 	return gulp.src(path.src.style)
-// 		.pipe(plumber())
-// 		.pipe(stylus({
-// 			compress: true
-// 		}))
-// 		.pipe(prefix(["last 12 version", "> 1%", "ie 8"]))
-// 		.pipe(rename({
-// 			extname: '.min.css'
-// 		}))
-// 		.pipe(gulp.dest(path.build.css));
-// });
-
 gulp.task('style:build', function() {
 	return gulp.src(path.src.style)
 		.pipe(plumber())
@@ -134,18 +109,6 @@ gulp.task('libs:build', function() {
 gulp.task('clean', function() {
 	return del.sync('build');
 });
-
-// gulp.task('build', [
-// 	'clean',
-// 	'pug:build',
-// 	'js:build',
-// 	'js:build_min',
-// 	'style:build',
-// 	'style:build_min',
-// 	'image:build',
-// 	'libs:build',
-// 	'fonts:build'
-// ]);
 
 gulp.task('dev', [
 	'clean',

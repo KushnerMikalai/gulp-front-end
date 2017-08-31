@@ -1,19 +1,14 @@
-# gulp-starter (made by Nikolai Kushner - kushner.of.by)
+## gulp-starter (made by Nikolai Kushner)
 
-## pug / stylus
+### pug / stylus
 
-## Setup
-
+### Setup
 Make sure you have `npm`:
-
 ```bash
 npm i
 bower i
 ```
-## Usage
-
+### Usage
 ```bash
 gulp
 ```
-
-Good Lack, bro!!!

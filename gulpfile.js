@@ -32,7 +32,7 @@ var path = {
 		libs: 'src/libs/**/*'
 	},
 	watch: {
-		pug: 'src/pug/**/*',
+		pug: 'src/html/**/*',
 		js: 'src/js/**/*',
 		style: 'src/style/**/*',
 	},

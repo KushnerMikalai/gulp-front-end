@@ -34,7 +34,7 @@ var path = {
 	watch: {
 		pug: 'src/html/**/*',
 		js: 'src/js/**/*',
-		style: 'src/style/**/*',
+		style: 'src/style/**/*'
 	},
 	clean: './build'
 };
@@ -122,6 +122,7 @@ gulp.task('dev', [
 
 gulp.task('watch', function() {
 	gulp.watch(path.src.libs, ['libs:build']);
+	gulp.watch(path.src.pug, ['pug:build']);
 	gulp.watch(path.watch.pug, ['pug:build']);
 	gulp.watch(path.watch.style, ['style:build']);
 	gulp.watch(path.watch.js, ['js:build']);

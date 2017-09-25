@@ -1,17 +1,27 @@
-## gulp-starter (made by Nikolai Kushner)
+## Nick Project Template
+**Quick Start Project Template**
 
-### Setup
-Must be set globally `npm` or `yarn`:
-```bash
+## Project start
+
+### Tilt the repository and go to the project folder
+```
+git clone git@github.com:KushnerMikalai/gulp-front-end.git
+```
+
+### Install modules
+```
 npm i
 ```
-or faster
-```bash
+
+or many times faster [yarn](https://github.com/yarnpkg/yarn)
+
+```
 yarn install
 ```
-### Usage
-```bash
+
+### Run the template
+```
 gulp
 ```
 The development of - http://localhost:9000/, after launch ``` gulp ```.
-Assembled and ready result in a folder - build
+Assembled and ready result in a folder - dist

@@ -15,33 +15,32 @@ var gulp = require('gulp'),
 	reload = browserSync.reload;
 
 var path = {
-	build: {
-		pug: 'build',
-		js: 'build/js/',
-		css: 'build/css/',
-		img: 'build/img/',
-		fonts: 'build/fonts/',
-		libs: 'build/libs/'
+	dist: {
+		pug: 'dist',
+		js: 'dist/assets/js/',
+		css: 'dist/assets/css/',
+		img: 'dist/assets/img/',
+		fonts: 'dist/assets/fonts/',
+		libs: 'dist/assets/libs/'
 	},
 	src: {
-		pug: 'src/*.pug',
-		js: 'src/js/*.js',
-		style: 'src/style/*.styl',
-		img: 'src/img/**/*',
-		fonts: 'src/fonts/**/*',
-		libs: 'src/libs/**/*'
+		pug: 'src/pages/*.pug',
+		js: 'src/assets/js/*.js',
+		style: 'src/styles/*.styl',
+		img: 'src/assets/img/**/*',
+		fonts: 'src/assets/fonts/**/*',
+		libs: 'src/assets/libs/**/*'
 	},
 	watch: {
-		pug: 'src/html/**/*',
-		js: 'src/js/**/*',
-		style: 'src/style/**/*'
+		pug: 'src/blocks/**/*.pug',
+		style: 'src/blocks/**/*.styl'
 	},
-	clean: './build'
+	clean: './dist'
 };
 
 var config = {
 	server: {
-		baseDir: "./build"
+		baseDir: "./dist"
 	},
 	tunnel: true,
 	host: 'localhost',
@@ -53,34 +52,34 @@ gulp.task('webserver', function() {
 	browserSync(config);
 });
 
-gulp.task('pug:build', function() {
+gulp.task('pug:dist', function() {
 	return gulp.src(path.src.pug)
 		.pipe(plumber())
 		.pipe(pug({
 			pretty: true
 		}))
-		.pipe(gulp.dest(path.build.pug))
+		.pipe(gulp.dest(path.dist.pug))
 		.pipe(reload({stream: true}));
 });
 
-gulp.task('js:build', function() {
+gulp.task('js:dist', function() {
 	return gulp.src(path.src.js)
 		.pipe(plumber())
 		.pipe(rigger())
-		.pipe(gulp.dest(path.build.js))
+		.pipe(gulp.dest(path.dist.js))
 		.pipe(reload({stream: true}));
 });
 
-gulp.task('style:build', function() {
+gulp.task('style:dist', function() {
 	return gulp.src(path.src.style)
 		.pipe(plumber())
 		.pipe(stylus())
 		.pipe(prefix(["last 12 version", "> 1%", "ie 9"]))
-		.pipe(gulp.dest(path.build.css))
+		.pipe(gulp.dest(path.dist.css))
 		.pipe(reload({stream: true}));
 });
 
-gulp.task('image:build', function() {
+gulp.task('image:dist', function() {
 	return gulp.src(path.src.img)
 		.pipe(plumber())
 		.pipe(imagemin({
@@ -88,46 +87,48 @@ gulp.task('image:build', function() {
 			progressive: true,
 			interlaced: true
 		}))
-		.pipe(gulp.dest(path.build.img))
+		.pipe(gulp.dest(path.dist.img))
 		.pipe(reload({stream: true}));
 });
 
-gulp.task('fonts:build', function() {
+gulp.task('fonts:dist', function() {
 	return gulp.src(path.src.fonts)
 		.pipe(plumber())
-		.pipe(gulp.dest(path.build.fonts))
+		.pipe(gulp.dest(path.dist.fonts))
 		.pipe(reload({stream: true}));
 });
 
-gulp.task('libs:build', function() {
+gulp.task('libs:dist', function() {
 	return gulp.src(path.src.libs)
 		.pipe(plumber())
-		.pipe(gulp.dest(path.build.libs))
+		.pipe(gulp.dest(path.dist.libs))
 		.pipe(reload({stream: true}));
 });
 
 gulp.task('clean', function() {
-	return del.sync('build');
+	return del.sync('dist');
 });
 
 gulp.task('dev', [
 	'clean',
-	'pug:build',
-	'js:build',
-	'style:build',
-	'libs:build',
-	'fonts:build',
-	'image:build'
+	'pug:dist',
+	'js:dist',
+	'style:dist',
+	'libs:dist',
+	'fonts:dist',
+	'image:dist'
 ]);
 
-gulp.task('watch', function() {
-	gulp.watch(path.src.libs, ['libs:build']);
-	gulp.watch(path.src.pug, ['pug:build']);
-	gulp.watch(path.watch.pug, ['pug:build']);
-	gulp.watch(path.watch.style, ['style:build']);
-	gulp.watch(path.watch.js, ['js:build']);
-	gulp.watch(path.src.img, ['image:build']);
-	gulp.watch(path.src.fonts, ['fonts:build']);
+gulp.task('watch', () => {
+	gulp.watch(path.watch.pug, ['pug:dist']);
+	gulp.watch(path.watch.style, ['style:dist']);
+
+	gulp.watch(path.src.libs, ['libs:dist']);
+	gulp.watch(path.src.style, ['style:dist']);
+	gulp.watch(path.src.pug, ['pug:dist']);
+	gulp.watch(path.src.js, ['js:dist']);
+	gulp.watch(path.src.img, ['image:dist']);
+	gulp.watch(path.src.fonts, ['fonts:dist']);
 });
 
-gulp.task('default', ['dev', 'webserver', 'watch']);
+gulp.task('default', ['dev', 'watch', 'webserver']);

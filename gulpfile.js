@@ -3,10 +3,10 @@
 var gulp = require('gulp'),
 	plumber = require('gulp-plumber'),
 	watch = require('gulp-watch'),
-	prefix = require('gulp-autoprefixer'),
+	autoprefixer = require('gulp-autoprefixer'),
 	rigger = require('gulp-rigger'),
-	pug = require('gulp-pug'),
-	stylus = require('gulp-stylus'),
+	sass = require('gulp-sass'),
+	sassGlob = require('gulp-sass-glob'),
 	imagemin = require('gulp-imagemin'),
 	uglify = require('gulp-uglify'),
 	rename = require("gulp-rename"),
@@ -16,7 +16,7 @@ var gulp = require('gulp'),
 
 var path = {
 	dist: {
-		pug: 'dist',
+		html: 'dist',
 		js: 'dist/assets/js/',
 		css: 'dist/assets/css/',
 		img: 'dist/assets/img/',
@@ -24,45 +24,38 @@ var path = {
 		libs: 'dist/assets/libs/'
 	},
 	src: {
-		pug: 'src/pages/*.pug',
+		html: 'src/*.html',
 		js: 'src/assets/js/*.js',
-		style: 'src/styles/*.styl',
+		css: 'src/assets/css/*.scss',
 		img: 'src/assets/img/**/*',
 		fonts: 'src/assets/fonts/**/*',
 		libs: 'src/assets/libs/**/*'
 	},
-	watch: {
-		pug: 'src/blocks/**/*.pug',
-		style: 'src/blocks/**/*.styl'
-	},
-	clean: './dist'
+  clean: './dist'
 };
 
 var config = {
-	server: {
-		baseDir: "./dist"
-	},
-	tunnel: true,
-	host: 'localhost',
-	port: 9000,
-	logPrefix: "front_nik"
+  server: {
+    baseDir: "./dist"
+  },
+  tunnel: true,
+  host: 'localhost',
+  port: 9000,
+  logPrefix: "frontend"
 };
 
 gulp.task('webserver', function() {
-	browserSync(config);
+  browserSync(config);
 });
 
-gulp.task('pug:dist', function() {
-	return gulp.src(path.src.pug)
-		.pipe(plumber())
-		.pipe(pug({
-			pretty: true
-		}))
-		.pipe(gulp.dest(path.dist.pug))
-		.pipe(reload({stream: true}));
+gulp.task('html', function() {
+  return gulp.src(path.src.html)
+    .pipe(rigger())
+    .pipe(gulp.dest(path.dist.html))
+    .pipe(reload({stream: true}));
 });
 
-gulp.task('js:dist', function() {
+gulp.task('js', function() {
 	return gulp.src(path.src.js)
 		.pipe(plumber())
 		.pipe(rigger())
@@ -70,16 +63,19 @@ gulp.task('js:dist', function() {
 		.pipe(reload({stream: true}));
 });
 
-gulp.task('style:dist', function() {
-	return gulp.src(path.src.style)
-		.pipe(plumber())
-		.pipe(stylus())
-		.pipe(prefix(["last 12 version", "> 1%", "ie 9"]))
-		.pipe(gulp.dest(path.dist.css))
-		.pipe(reload({stream: true}));
+gulp.task('css', function() {
+  return gulp.src(path.src.css)
+    .pipe(sassGlob())
+    .pipe(sass())
+    .pipe(autoprefixer({
+      browsers: ["last 12 version", "> 1%", "ie 9"],
+      cascade: true
+    }))
+    .pipe(gulp.dest(path.dist.css))
+    .pipe(reload({stream: true}));
 });
 
-gulp.task('image:dist', function() {
+gulp.task('image', function() {
 	return gulp.src(path.src.img)
 		.pipe(plumber())
 		.pipe(imagemin({
@@ -91,14 +87,14 @@ gulp.task('image:dist', function() {
 		.pipe(reload({stream: true}));
 });
 
-gulp.task('fonts:dist', function() {
+gulp.task('fonts', function() {
 	return gulp.src(path.src.fonts)
 		.pipe(plumber())
 		.pipe(gulp.dest(path.dist.fonts))
 		.pipe(reload({stream: true}));
 });
 
-gulp.task('libs:dist', function() {
+gulp.task('libs', function() {
 	return gulp.src(path.src.libs)
 		.pipe(plumber())
 		.pipe(gulp.dest(path.dist.libs))
@@ -106,29 +102,29 @@ gulp.task('libs:dist', function() {
 });
 
 gulp.task('clean', function() {
-	return del.sync('dist');
+  return del.sync('dist');
 });
 
 gulp.task('dev', [
-	'clean',
-	'pug:dist',
-	'js:dist',
-	'style:dist',
-	'libs:dist',
-	'fonts:dist',
-	'image:dist'
+  'clean',
+  'html',
+  'js',
+  'css',
+  'libs',
+  'fonts',
+  'image'
 ]);
 
 gulp.task('watch', () => {
-	gulp.watch(path.watch.pug, ['pug:dist']);
-	gulp.watch(path.watch.style, ['style:dist']);
-
-	gulp.watch(path.src.libs, ['libs:dist']);
-	gulp.watch(path.src.style, ['style:dist']);
-	gulp.watch(path.src.pug, ['pug:dist']);
-	gulp.watch(path.src.js, ['js:dist']);
-	gulp.watch(path.src.img, ['image:dist']);
-	gulp.watch(path.src.fonts, ['fonts:dist']);
+	gulp.watch('*.html', {cwd: 'src/blocks/'}, ['html']);
+	gulp.watch('*.scss', {cwd: 'src/blocks/'}, ['css']);
+	gulp.watch('*.scss', {cwd: 'src/assets/css/helpers/'}, ['css']);
+	gulp.watch('*.scss', {cwd: 'src/assets/css/'}, ['css']);
+	gulp.watch('*.html', {cwd: 'src/'}, ['html']);
+	gulp.watch(path.src.libs, ['libs']);
+	gulp.watch(path.src.js, ['js']);
+	gulp.watch(path.src.img, ['image']);
+	gulp.watch(path.src.fonts, ['fonts']);
 });
 
 gulp.task('default', ['dev', 'watch', 'webserver']);
